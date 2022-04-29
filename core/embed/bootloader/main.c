@@ -106,8 +106,24 @@ static secbool bootloader_usb_loop(const vendor_header *const vhdr,
 
   uint8_t buf[USB_PACKET_SIZE];
   int r;
+  static int current = 0;
+  int response;
 
   for (;;) {
+    if (current == 0) {
+      response = ui_input_poll(INPUT_NEXT, false);
+      if (INPUT_NEXT == response) {
+        current = 1;
+        ui_bootloader_second(hdr);
+      }
+    } else {
+      response = ui_input_poll(INPUT_PREVIOUS, false);
+      if (INPUT_PREVIOUS == response) {
+        current = 0;
+        ui_bootloader_first(hdr);
+      }
+    }
+
     r = spi_slave_poll(buf);
     if (r != USB_PACKET_SIZE) {
       r = usb_webusb_read_blocking(USB_IFACE_NUM, buf, USB_PACKET_SIZE,
@@ -134,12 +150,24 @@ static secbool bootloader_usb_loop(const vendor_header *const vhdr,
         break;
       case 5:  // WipeDevice
         ui_fadeout();
+#if PRODUCTION_MODEL == 'H'
+        ui_wipe_confirm(hdr);
+#else
         ui_screen_wipe_confirm();
+#endif
         ui_fadein();
+#if PRODUCTION_MODEL == 'H'
+        int response = ui_input_poll(INPUT_CONFIRM | INPUT_CANCEL, true);
+#else
         int response = ui_user_input(INPUT_CONFIRM | INPUT_CANCEL);
+#endif
         if (INPUT_CANCEL == response) {
           ui_fadeout();
+#if PRODUCTION_MODEL == 'H'
+          ui_bootloader_first(hdr);
+#else
           ui_screen_firmware_info(vhdr, hdr);
+#endif
           ui_fadein();
           send_user_abort(USB_IFACE_NUM, "Wipe cancelled");
           break;
@@ -322,24 +350,7 @@ int main(void) {
 
   // start the bootloader if no or broken firmware found ...
   if (firmware_present != sectrue) {
-    // show intro animation
-
-    // no ui_fadeout(); - we already start from black screen
-    ui_screen_welcome_first();
-    ui_fadein();
-
-    hal_delay(1000);
-
-    ui_fadeout();
-    ui_screen_welcome_second();
-    ui_fadein();
-
-    hal_delay(1000);
-
-    ui_fadeout();
-    ui_screen_welcome_third();
-    ui_fadein();
-
+    ui_bootloader_first(&hdr);
     // erase storage
     ensure(flash_erase_sectors(STORAGE_SECTORS, STORAGE_SECTORS_COUNT, NULL),
            NULL);
