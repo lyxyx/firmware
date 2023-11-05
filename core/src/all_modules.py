@@ -737,6 +737,16 @@ apps.starcoin.sign_tx
 import apps.starcoin.sign_tx
 apps.starcoin.verify_message
 import apps.starcoin.verify_message
+apps.starknet
+import apps.starknet
+apps.starknet.get_address
+import apps.starknet.get_address
+apps.starknet.helper
+import apps.starknet.helper
+apps.starknet.sign_message
+import apps.starknet.sign_message
+apps.starknet.sign_tx
+import apps.starknet.sign_tx
 apps.sui
 import apps.sui
 apps.sui.get_address

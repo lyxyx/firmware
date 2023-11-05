@@ -318,6 +318,12 @@ def find_message_handler_module(msg_type: int) -> str:
         if msg_type == MessageType.NexaSignTx:
             return "apps.nexa.sign_tx"
 
+        # starknet
+        if msg_type == MessageType.StarkNetGetAddress:
+            return "apps.starknet.get_address"
+        if msg_type == MessageType.StarkNetSignTx:
+            return "apps.starknet.sign_tx"
+
     raise ValueError
 
 

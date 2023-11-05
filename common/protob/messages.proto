@@ -496,6 +496,12 @@ enum MessageType {
     MessageType_NexaTxInputRequest = 11404 [(wire_out) = true];
     MessageType_NexaTxInputAck = 11405 [(wire_in) = true];
 
+    // StarkNet
+    MessageType_StarkNetGetAddress = 11500 [(wire_in) = true];
+    MessageType_StarkNetAddress = 11501 [(wire_out) = true];
+    MessageType_StarkNetSignTx = 11502 [(wire_in) = true];
+    MessageType_StarkNetSignedTx = 11503 [(wire_out) = true];
+
     //onekey
     MessageType_DeviceBackToBoot = 903 [(wire_in) = true];
     MessageType_RebootToBoardloader = 904 [(wire_in) = true];

@@ -339,6 +339,10 @@ if not utils.BITCOIN_ONLY:
     NexaSignedTx = 11403
     NexaTxInputRequest = 11404
     NexaTxInputAck = 11405
+    StarkNetGetAddress = 11500
+    StarkNetAddress = 11501
+    StarkNetSignTx = 11502
+    StarkNetSignedTx = 11503
     DeviceBackToBoot = 903
     RebootToBoardloader = 904
     DeviceInfoSettings = 10001

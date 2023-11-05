@@ -365,6 +365,10 @@ class MessageType(IntEnum):
     NexaSignedTx = 11403
     NexaTxInputRequest = 11404
     NexaTxInputAck = 11405
+    StarkNetGetAddress = 11500
+    StarkNetAddress = 11501
+    StarkNetSignTx = 11502
+    StarkNetSignedTx = 11503
     DeviceBackToBoot = 903
     RebootToBoardloader = 904
     DeviceInfoSettings = 10001
@@ -8817,6 +8821,71 @@ class StarcoinVerifyMessage(protobuf.MessageType):
         self.public_key = public_key
         self.signature = signature
         self.message = message
+
+
+class StarkNetGetAddress(protobuf.MessageType):
+    MESSAGE_WIRE_TYPE = 11500
+    FIELDS = {
+        1: protobuf.Field("address_n", "uint32", repeated=True, required=False),
+        2: protobuf.Field("show_display", "bool", repeated=False, required=False),
+    }
+
+    def __init__(
+        self,
+        *,
+        address_n: Optional[Sequence["int"]] = None,
+        show_display: Optional["bool"] = None,
+    ) -> None:
+        self.address_n: Sequence["int"] = address_n if address_n is not None else []
+        self.show_display = show_display
+
+
+class StarkNetAddress(protobuf.MessageType):
+    MESSAGE_WIRE_TYPE = 11501
+    FIELDS = {
+        1: protobuf.Field("address", "string", repeated=False, required=False),
+    }
+
+    def __init__(
+        self,
+        *,
+        address: Optional["str"] = None,
+    ) -> None:
+        self.address = address
+
+
+class StarkNetSignTx(protobuf.MessageType):
+    MESSAGE_WIRE_TYPE = 11502
+    FIELDS = {
+        1: protobuf.Field("address_n", "uint32", repeated=True, required=False),
+        2: protobuf.Field("raw_tx", "bytes", repeated=False, required=True),
+    }
+
+    def __init__(
+        self,
+        *,
+        raw_tx: "bytes",
+        address_n: Optional[Sequence["int"]] = None,
+    ) -> None:
+        self.address_n: Sequence["int"] = address_n if address_n is not None else []
+        self.raw_tx = raw_tx
+
+
+class StarkNetSignedTx(protobuf.MessageType):
+    MESSAGE_WIRE_TYPE = 11503
+    FIELDS = {
+        1: protobuf.Field("public_key", "bytes", repeated=False, required=True),
+        2: protobuf.Field("signature", "bytes", repeated=False, required=True),
+    }
+
+    def __init__(
+        self,
+        *,
+        public_key: "bytes",
+        signature: "bytes",
+    ) -> None:
+        self.public_key = public_key
+        self.signature = signature
 
 
 class StellarAsset(protobuf.MessageType):
